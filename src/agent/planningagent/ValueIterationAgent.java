@@ -71,7 +71,9 @@ public class ValueIterationAgent extends PlanningValueAgent{
 		//delta est utilise pour detecter la convergence de l'algorithme
 		//lorsque l'on planifie jusqu'a convergence, on arrete les iterations lorsque
 		//delta < epsilon 
-		this.delta=0.0;
+		this.delta = 0.0;
+		this.vmin = 0;
+		this.vmax = 1;
 		//*** VOTRE CODE
 		try {
 			for (Etat etat : this.mdp.getEtatsAccessibles()){
@@ -89,21 +91,15 @@ public class ValueIterationAgent extends PlanningValueAgent{
 					}
 					if (sum > vks)
 						vks = sum;
-
 				}
 
+				this.delta = Math.max(this.delta, Math.abs(vks - this.V.get(etat)));
 				V.put(etat, vks);
-				this.delta = Math.max( this.delta, Math.abs(vks - this.V.get(etat)));
 			}
-
-			// mise a jour vmax et vmin pour affichage du gradient de couleur:
-			//vmax est la valeur  max de V  pour tout s
-			//vmin est la valeur min de V  pour tout s
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//******************* laisser la notification a la fin de la methode	
+		//*******************
 		this.notifyObs();
 	}
 	

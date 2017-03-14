@@ -15,6 +15,8 @@ import environnement.IllegalActionException;
 import environnement.MDP;
 import environnement.Action2D;
 
+import static java.lang.Math.abs;
+
 
 /**
  * Cet agent met a jour sa fonction de valeur avec value iteration 
@@ -74,22 +76,24 @@ public class ValueIterationAgent extends PlanningValueAgent{
 		try {
 			for (Etat etat : this.mdp.getEtatsAccessibles()){
 				Double vks = 0D;
-				Double sum = 0D;
 				for (Action action : mdp.getActionsPossibles(etat)){
-						Map<Etat, Double> transitionProba = mdp.getEtatTransitionProba(etat, action);
+					Map<Etat, Double> transitionProba = mdp.getEtatTransitionProba(etat, action);
 
-						for (Map.Entry<Etat, Double> transition : transitionProba.entrySet())
-						{
-							Double recompense = mdp.getRecompense(etat, action, transition.getKey());
-							Double proba = transition.getValue();
-							sum = proba * (recompense + gamma * this.V.get(transition.getKey()));
+					Double sum = 0D;
+					for (Map.Entry<Etat, Double> transition : transitionProba.entrySet())
+					{
+						Double recompense = mdp.getRecompense(etat, action, transition.getKey());
+						Double proba = transition.getValue();
+						Double vk = this.V.get(transition.getKey());
+						sum += proba * (recompense + this.gamma * vk);
+					}
+					if (sum > vks)
+						vks = sum;
 
-							if (sum > vks)
-								vks = sum;
-						}
 				}
 
 				V.put(etat, vks);
+				this.delta = Math.max( this.delta, Math.abs(vks - this.V.get(etat)));
 			}
 
 			// mise a jour vmax et vmin pour affichage du gradient de couleur:

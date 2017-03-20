@@ -123,6 +123,7 @@ public class ValueIterationAgent extends PlanningValueAgent{
 	public double getValeur(Etat _e) {
 		return  V.get(_e);
 	}
+
 	/**
 	 * renvoi la (les) action(s) de plus forte(s) valeur(s) dans etat 
 	 * (plusieurs actions sont renvoyees si valeurs identiques, liste vide si aucune action n'est possible)
@@ -130,13 +131,40 @@ public class ValueIterationAgent extends PlanningValueAgent{
 	@Override
 	public List<Action> getPolitique(Etat _e) {
 		//*** VOTRE CODE
-		
-		// retourne action de meilleure valeur dans _e selon V, 
+		// retourne action de meilleure valeur dans _e selon V,
 		// retourne liste vide si aucune action legale (etat absorbant)
 		List<Action> returnactions = new ArrayList<Action>();
+
+		try {
+			for (Etat etat : this.mdp.getEtatsAccessibles()) {
+				if (mdp.estBut(etat)) {
+					returnactions = mdp.getActionsPossibles(etat);
+					break;
+				} else {
+					Double vks = 0D;
+					for (Action action : mdp.getActionsPossibles(etat)) {
+						Map<Etat, Double> transitionProba = mdp.getEtatTransitionProba(etat, action);
+						Double sum = 0D;
+						for (Map.Entry<Etat, Double> transition : transitionProba.entrySet()) {
+							Double recompense = mdp.getRecompense(etat, action, transition.getKey());
+							Double proba = transition.getValue();
+							Double vk = this.V.get(transition.getKey());
+							sum += proba * (recompense + this.gamma * vk);
+						}
+						if (sum > vks) {
+							vks = sum;
+							returnactions.clear();
+							returnactions.add(action);
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	
 		return returnactions;
-		
 	}
 	
 	@Override

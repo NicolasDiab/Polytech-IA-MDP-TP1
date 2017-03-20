@@ -136,28 +136,25 @@ public class ValueIterationAgent extends PlanningValueAgent{
 		List<Action> returnactions = new ArrayList<Action>();
 
 		try {
-            if (mdp.estBut(_e)) {
-                returnactions = mdp.getActionsPossibles(_e);
-            } else {
-                Double vks = 0D;
-                for (Action action : mdp.getActionsPossibles(_e)) {
-                    Map<Etat, Double> transitionProba = mdp.getEtatTransitionProba(_e, action);
-                    Double sum = 0D;
-                    for (Map.Entry<Etat, Double> transition : transitionProba.entrySet()) {
-                        Double recompense = mdp.getRecompense(_e, action, transition.getKey());
-                        Double proba = transition.getValue();
-                        Double vk = this.V.get(transition.getKey());
-                        sum += proba * (recompense + this.gamma * vk);
-                    }
-                    if (sum > vks) {
-                        vks = sum;
-                        returnactions.clear();
-                        returnactions.add(action);
-                    }
-                    if (sum == vks) {
-                        returnactions.add(action);
-                    }
-                }
+			Double vks = 0D;
+			for (Action action : mdp.getActionsPossibles(_e)) {
+				Map<Etat, Double> transitionProba = mdp.getEtatTransitionProba(_e, action);
+				Double sum = 0D;
+
+				for (Map.Entry<Etat, Double> transition : transitionProba.entrySet()) {
+					Double recompense = mdp.getRecompense(_e, action, transition.getKey());
+					Double proba = transition.getValue();
+					Double vk = this.V.get(transition.getKey());
+					sum += proba * (recompense + this.gamma * vk);
+				}
+				if (sum > vks) {
+					vks = sum;
+					returnactions.clear();
+					returnactions.add(action);
+				}
+				if (sum == vks) {
+					returnactions.add(action);
+				}
 			}
 		}
 		catch (Exception e) {

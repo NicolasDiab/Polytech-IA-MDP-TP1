@@ -79,8 +79,7 @@ public class QLearningAgent extends RLAgent {
     @Override
     public double getValeur(Etat e) {
         //*** VOTRE CODE
-        return 0.0;
-
+        return this.qvaleurs.get(e).entrySet().stream().mapToDouble(entry -> (double)entry.getValue()).reduce(0, Double::max);
     }
 
     @Override
@@ -96,8 +95,6 @@ public class QLearningAgent extends RLAgent {
     @Override
     public void setQValeur(Etat e, Action a, double d) {
         //*** VOTRE CODE
-
-
         // mise a jour vmax et vmin pour affichage du gradient de couleur:
         //vmax est la valeur de max pour tout s de V
         //vmin est la valeur de min pour tout s de V
@@ -124,8 +121,10 @@ public class QLearningAgent extends RLAgent {
     public void endStep(Etat e, Action a, Etat esuivant, double reward) {
         if (RLAgent.DISPRL)
             System.out.println("QL mise a jour etat " + e + " action " + a + " etat' " + esuivant + " r " + reward);
-
+        double value = 0.0;
         //*** VOTRE CODE
+        value = (1-this.getAlpha());
+        this.setQValeur(e,a,0/*Valeur à calculer*/);
     }
 
     @Override

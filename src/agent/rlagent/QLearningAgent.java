@@ -26,10 +26,10 @@ public class QLearningAgent extends RLAgent {
     //protected HashMap<Pair<Etat,Action>,Double> qvaleurs;
 
 
-    /**
+    /*/**
      * @param alpha
      * @param gamma
-     * @param Environnement
+     * @param _env
      * @param nbS           attention ici il faut tous les etats (meme obstacles) car Q avec tableau ...
      * @param nbA
      */
@@ -81,7 +81,7 @@ public class QLearningAgent extends RLAgent {
     @Override
     public double getValeur(Etat e) {
         //*** VOTRE CODE
-        return this.qvaleurs.get(e).entrySet().stream().mapToDouble(entry -> (double)entry.getValue()).reduce(0, Double::max);
+        return (this.qvaleurs.containsKey(e))?this.qvaleurs.get(e).entrySet().stream().mapToDouble(entry -> (double)entry.getValue()).reduce(0, Double::max):0.0;
     }
 
     @Override

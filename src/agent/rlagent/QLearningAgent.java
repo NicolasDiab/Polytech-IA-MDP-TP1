@@ -53,7 +53,7 @@ public class QLearningAgent extends RLAgent {
         // retourne action de meilleures valeurs dans _e selon Q : utiliser getQValeur()
         // retourne liste vide si aucune action legale (etat terminal)
         List<Action> actionsPossible = this.getActionsLegales(e);
-        double max = Double.MIN_VALUE;
+        double max = Double.MIN_NORMAL;
         //*** VOTRE CODE
         if (actionsPossible.size() == 0) {//etat  absorbant; impossible de le verifier via environnement
             System.out.println("aucune action legale");

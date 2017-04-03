@@ -22,6 +22,7 @@ public class EtatPacmanMDPClassic implements Etat , Cloneable{
 	public EtatPacmanMDPClassic(StateGamePacman _stategamepacman){
 		StateAgentPacman s = _stategamepacman.getPacmanState(0);
 		this.pacman = new Position2D(s.getX(),s.getY());
+		this.ghost = new ArrayList<>();
 		for (int i =0; i < _stategamepacman.getNumberOfGhosts();i++) {
 			s = _stategamepacman.getGhostState(i);
 			this.ghost.add(new Position2D(s.getX(),s.getY()));

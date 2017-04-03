@@ -57,25 +57,8 @@ public class QLearningAgent extends RLAgent {
         if (actionsPossible.size() == 0) {//etat  absorbant; impossible de le verifier via environnement
             System.out.println("aucune action legale");
             return new ArrayList<Action>();
-        } else {
-        	double maxQValeur = 0;
-        	double currentQValeur;
-
-
+        } else
         	return actionsPossible.stream().filter(action -> this.getQValeur(e,action) == this.getValeur(e)).collect(Collectors.toList());
-
-
-        	/*for (Action a : actionsPossible) {
-				currentQValeur = this.getQValeur(e, a);
-				if (currentQValeur > maxQValeur) {
-					maxQValeur = currentQValeur;
-					returnactions.clear();
-					returnactions.add(a);
-				} else if (currentQValeur == maxQValeur) {
-					returnactions.add(a);
-				}
-			}*/
-		}
     }
 
     @Override

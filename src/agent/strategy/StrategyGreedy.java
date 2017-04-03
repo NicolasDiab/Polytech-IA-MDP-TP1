@@ -34,7 +34,7 @@ public class StrategyGreedy extends StrategyExploration{
 		}
 		actions = this.agent.getPolitique(_e);
 
-		return actions.get((int)Math.round(d * actions.size()));
+		return actions.get((int)Math.round(d * actions.size()-1));
 	}
 
 	public double getEpsilon() {

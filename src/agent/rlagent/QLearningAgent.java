@@ -1,6 +1,7 @@
 package agent.rlagent;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collector;
@@ -52,19 +53,32 @@ public class QLearningAgent extends RLAgent {
         // retourne action de meilleures valeurs dans _e selon Q : utiliser getQValeur()
         // retourne liste vide si aucune action legale (etat terminal)
         List<Action> actionsPossible = this.getActionsLegales(e);
-
-		//*** VOTRE CODE
+        double max = 0;
+        //*** VOTRE CODE
         if (actionsPossible.size() == 0) {//etat  absorbant; impossible de le verifier via environnement
             System.out.println("aucune action legale");
             return new ArrayList<Action>();
-        } else
-        	return actionsPossible.stream().filter(action -> this.getQValeur(e,action) == this.getValeur(e)).collect(Collectors.toList());
+        } else {
+            List<Action> actions = new ArrayList<>();
+            for (Action action : actionsPossible) {
+                double value = this.getQValeur(e, action);
+                if (value > max) {
+                    max = value;
+                    actions.clear();
+                }
+                if(value == max)
+                    actions.add(action);
+            }
+            return actions;
+        }
     }
 
     @Override
     public double getValeur(Etat e) {
         //*** VOTRE CODE
-        return (this.qvaleurs.containsKey(e))?this.qvaleurs.get(e).entrySet().stream().mapToDouble(entry -> (double)entry.getValue()).reduce(0, Double::max):0.0;
+        return (this.qvaleurs.containsKey(e)) ? this.qvaleurs.get(e).entrySet()
+                .stream().mapToDouble(entry -> (double) entry.getValue())
+                .reduce(0, Double::max) : 0.0;
     }
 
     @Override
@@ -106,10 +120,9 @@ public class QLearningAgent extends RLAgent {
     public void endStep(Etat e, Action a, Etat esuivant, double reward) {
         if (RLAgent.DISPRL)
             System.out.println("QL mise a jour etat " + e + " action " + a + " etat' " + esuivant + " r " + reward);
-
         //*** VOTRE CODE
         double valeur = (1 - this.getAlpha()) * this.getQValeur(e, a) + this.getAlpha() * (reward + this.getGamma() * this.getValeur(esuivant));
-        this.setQValeur(e,a,valeur/*Valeur à calculer*/);
+        this.setQValeur(e, a, valeur/*Valeur à calculer*/);
     }
 
     @Override

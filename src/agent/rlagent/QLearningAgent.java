@@ -138,6 +138,7 @@ public class QLearningAgent extends RLAgent {
     @Override
     public void reset() {
         super.reset();
+        //*** VOTRE CODE
         this.qvaleurs.clear();
 
         this.episodeNb = 0;

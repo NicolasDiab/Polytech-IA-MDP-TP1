@@ -51,13 +51,26 @@ public class QLearningAgent extends RLAgent {
         // retourne liste vide si aucune action legale (etat terminal)
         List<Action> returnactions = new ArrayList<Action>();
         List<Action> actionsPossible = this.getActionsLegales(e);
+
+		//*** VOTRE CODE
         if (actionsPossible.size() == 0) {//etat  absorbant; impossible de le verifier via environnement
             System.out.println("aucune action legale");
             return new ArrayList<Action>();
-        }
+        } else {
+        	double maxQValeur = 0;
+        	double currentQValeur;
 
-
-        //*** VOTRE CODE
+        	for (Action a : actionsPossible) {
+				currentQValeur = this.getQValeur(e, a);
+				if (currentQValeur > maxQValeur) {
+					maxQValeur = currentQValeur;
+					returnactions.clear();
+					returnactions.add(a);
+				} else if (currentQValeur == maxQValeur) {
+					returnactions.add(a);
+				}
+			}
+		}
         return returnactions;
 
 

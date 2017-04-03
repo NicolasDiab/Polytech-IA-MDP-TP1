@@ -3,6 +3,8 @@ package agent.rlagent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javafx.util.Pair;
 import environnement.Action;
@@ -49,7 +51,6 @@ public class QLearningAgent extends RLAgent {
     public List<Action> getPolitique(Etat e) {
         // retourne action de meilleures valeurs dans _e selon Q : utiliser getQValeur()
         // retourne liste vide si aucune action legale (etat terminal)
-        List<Action> returnactions = new ArrayList<Action>();
         List<Action> actionsPossible = this.getActionsLegales(e);
 
 		//*** VOTRE CODE
@@ -60,7 +61,11 @@ public class QLearningAgent extends RLAgent {
         	double maxQValeur = 0;
         	double currentQValeur;
 
-        	for (Action a : actionsPossible) {
+
+        	return actionsPossible.stream().filter(action -> this.getQValeur(e,action) == this.getValeur(e)).collect(Collectors.toList());
+
+
+        	/*for (Action a : actionsPossible) {
 				currentQValeur = this.getQValeur(e, a);
 				if (currentQValeur > maxQValeur) {
 					maxQValeur = currentQValeur;
@@ -69,11 +74,8 @@ public class QLearningAgent extends RLAgent {
 				} else if (currentQValeur == maxQValeur) {
 					returnactions.add(a);
 				}
-			}
+			}*/
 		}
-        return returnactions;
-
-
     }
 
     @Override
@@ -121,9 +123,7 @@ public class QLearningAgent extends RLAgent {
     public void endStep(Etat e, Action a, Etat esuivant, double reward) {
         if (RLAgent.DISPRL)
             System.out.println("QL mise a jour etat " + e + " action " + a + " etat' " + esuivant + " r " + reward);
-        double value = 0.0;
-        //*** VOTRE CODE
-        value = (1-this.getAlpha());
+
         this.setQValeur(e,a,0/*Valeur à calculer*/);
     }
 
